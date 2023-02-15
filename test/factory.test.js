@@ -56,25 +56,25 @@ describe("NewToken", function () {
 
     it("Get some variables", async function () {
         console.log("getName", await token.name())
-        let supply = ethers.utils.formatEther(await token.totalSupply()) * 10 ** 18
+        let supply = (await token.totalSupply()).toString()
         console.log("getTotalSupply", supply)
         console.log("getOwner", await token.owner())
     })
     it("Transfer tokens", async function () {
-        console.log(acc1.address)
+        let start = token.balanceOf(acc1.address);
         const tx = await token.transfer(acc1.address, 300);
         tx.wait()
-        let balance = ethers.utils.formatEther(await token.balanceOf(acc1.address)) * 10 ** 18
+        let balance = (await token.balanceOf(acc1.address)).toString()
         console.log(balance);
+        expect(await start != balance);
     })
 
     it("Owner can change stake parametrs", async function () {
         const value = await token.stakePercent();
-        console.log("start:", value)
         const tx = await token.stakePercentSet(10);
         tx.wait();
-        console.log("now", await token.stakePercent());
-        expect(await token.stakePercent() != value);
+        console.log(value.toString());
+        expect(await token.stakePercent != value);
     })
 
     it("user stake tokens, and then take them oit", async function () {
@@ -83,13 +83,13 @@ describe("NewToken", function () {
         tx.wait()
         const tx_stake = await token.connect(acc1).stakeCoins(100);
         tx_stake.wait();
-        let balance = ethers.utils.formatEther(await token.balanceOf(acc1.address)) * 10 ** 18
+        let balance = ethers.utils.formatEther(await token.balanceOf(acc1.address)) * 10 ** 18;
         console.log("Now balance is", balance);
         console.log("waiting for stake!");
         sleep(6000);
         const tx_withdraw = await token.connect(acc1).getPayment();
         tx_withdraw.wait();
-        balance = ethers.utils.formatEther(await token.balanceOf(acc1.address)) * 10 ** 18
+        balance = ethers.utils.formatEther(await token.balanceOf(acc1.address)) * 10 ** 18;
         console.log("Now balance is", balance);
         expect(token.balanceOf(acc1.address) > balanceBeforeStake);
     })
