@@ -1,8 +1,9 @@
 // React App
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ethers } from 'ethers';
 import { Button, Input } from '@skbkontur/react-ui';
 import abi from "./abi.json"
+import { TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS } from 'hardhat/builtin-tasks/task-names';
 const NewToken = () => {
     const [stakePercent, setStakePercent] = useState(0);
     const [stakeTerm, setStakeTerm] = useState(0);
@@ -10,7 +11,14 @@ const NewToken = () => {
     const [wallet, setWallet] = useState(null);
     const [tokenContract, setTokenContract] = useState(null);
     const [tokenBalance, setTokenBalance] = useState(0);
+    const [totalSupply, setTotalSupply] = useState(0);
+    const [name, setName] = useState();
+    const [stakeStatus, setStakeStatus] = useState(false);
+    const [currentValue, setCurrentValue] = useState(0);
 
+    const handleCurrentValue = (e) => {
+        setCurrentValue(e.target.value)
+    }
     // Connect to wallet
     useEffect(() => {
         async function connect() {
@@ -31,6 +39,7 @@ const NewToken = () => {
                 wallet
             );
             setTokenContract(tokenContract);
+            setName(await tokenContract.name())
         }
         connect();
 
@@ -39,22 +48,45 @@ const NewToken = () => {
     // Get token balance
     useEffect(() => {
         async function getBalance() {
-            const balance = await tokenContract.balanceOf(wallet.address);
+            let balance = await tokenContract.balanceOf(await wallet.getAddress());
+            balance = balance.toString()
             setTokenBalance(balance);
         }
-        async function getTotalCount() {
+        async function getTotalSupply() {
             const count = await tokenContract.totalSupply();
+            console.log(count.toString())
+            setTotalSupply(count.toString())
+        }
+        async function getStakeInfo() {
+            let percent = await tokenContract.stakePercent();
+            percent = percent.toString();
+            setStakePercent(percent);
+            let term = await tokenContract.stakeTerm();
+            term = term.toString();
+            setStakeTerm(term);
+            let min = await tokenContract.stakeMin();
+            min = min.toString();
+            setStakeMin(min);
         }
         if (tokenContract) {
             getBalance();
+            getTotalSupply();
+            getStakeInfo();
+            console.log(tokenBalance);
         }
     }, [tokenContract]);
 
+
+    //handlers (to be refactored)
+
+    const handleCheckState = async () => {
+        let status = await tokenContract.checkStake()
+        status = status.toString();
+        setStakeStatus(status);
+    }
     // Stake settings
     const stakePercentSet = async e => {
-        const stakePercent = e.target.value;
         await tokenContract.stakePercentSet(stakePercent);
-        setStakePercent(stakePercent);
     };
 
     const stakeTermSet = async e => {
@@ -83,43 +115,42 @@ const NewToken = () => {
         }
     };
     const test = async () => {
-
-        console.log(tokenContract)
+        console.log(await wallet.getAddress())
     }
 
     return (
         <div>
             <h1>Account INFO</h1>
-            <h3>Token Name : { }</h3>
-            <h3>Total supply :{ }</h3>
+            <h3>Token Name : {name}</h3>
+            <h3>Total supply :{totalSupply}</h3>
             <h3>Account Balance: {tokenBalance}</h3>
             <h1>Stake Settings(onlyowner)</h1>
             <input
                 label="Stake Percent"
-                value={stakePercent}></input>
+                value={stakePercent}
+                onChange={""}></input>
             <button onClick={stakePercentSet}>Set</button>
             <input
                 label="Stake Term"
-                value={stakeTerm}
-                onChange={stakeTermSet}></input>
-            <button>Set</button>
+                value={stakeTerm}></input>
+            <button onClick={stakePercentSet}>Set</button>
             <input
                 label="Stake Min"
                 value={stakeMin}
-                onChange={stakeMinSet}></input>
-            <button>Set</button>
+            ></input>
+            <button onClick={stakePercentSet}>Set</button>
 
             <h1>Stake Tokens</h1>
-            <h4>Current Term:{ }</h4>
-            <h4>Current Percent :{ }</h4>
-            <h4>Current Min Stake:{ }</h4>
-            <h3>You will get {"x"} tokens, if stake current value for {"y"} term</h3>
-            <input label="Amount"></input>
+            <h4>Current Term:{stakeTerm} seconds</h4>
+            <h4>Current Percent :{stakePercent} %</h4>
+            <h4>Current Min Stake:{stakeMin} coins</h4>
+            <h3>You will get {currentValue * (stakePercent / 100)} tokens, if stake current value for {stakeTerm} minutes</h3>
+            <input onChange={handleCurrentValue} label={currentValue}></input>
             <button onClick={stakeCoins}>Stake</button>
 
             <h1>Payment Menu</h1>
-            <button onClick={""}>Check stake status</button>
-            <status>{"done"}</status>
+            <button onClick={handleCheckState}>Check stake status</button>
+            <status>{stakeStatus}</status>
             <br></br>
             <button onClick={getPayment}>Get Payment</button>
             <button onClick={test}>Test</button>
