@@ -1,0 +1,36 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_symb",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_ownerTokens",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_systemTokens",
+                "type": "uint256"
+            }
+        ],
+        "name": "createNewToke",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]

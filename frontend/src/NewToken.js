@@ -6,6 +6,7 @@ import abi from "./abi.json"
 const NewToken = () => {
     const address = '0x8adE23ABb0d65A1a60c64a4238F91f20f0a14daF';
     //CONNECT
+
     const [wallet, setWallet] = useState();
     const [tokenContract, setTokenContract] = useState();
     const [name, setName] = useState();

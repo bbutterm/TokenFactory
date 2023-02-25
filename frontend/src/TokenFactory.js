@@ -1,9 +1,10 @@
 // React App
 
 import React, { useState } from 'react';
-import { ethers } from 'ethers';
-
+import { Contract, ethers } from 'ethers';
+import abi from "./abi2.json"
 function TokenFactoryApp() {
+  const address = "0x84CC24ADE74410149d46987C9455a434F900a92b"
   const [name, setName] = useState('');
   const [symb, setSymb] = useState('');
   const [ownerTokens, setOwnerTokens] = useState(0);
@@ -11,25 +12,12 @@ function TokenFactoryApp() {
   const [contractAddress, setContractAddress] = useState('');
 
   async function createNewToken() {
-    const provider = ethers.getDefaultProvider();
-    const signer = provider.getSigner();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new Contract(address, abi, signer);
+    const tx = await contract.createNewToke(name, symb, ownerTokens, systemTokens);
+    console.log(tx)
 
-    //const tokenFactoryContract = new ethers.Contract(
-    //  "0x0000000000000000000000000000000000000000",
-    //  TokenFactory.abi,
-    //  signer
-    //);
-
-    //const tx = await tokenFactoryContract.createNewToken(
-    //  name,
-    //  symb,
-    //  ownerTokens,
-    //  systemTokens
-    //);
-
-    //const receipt = await tx.wait();
-    //const contractAddress = receipt.contractAddress;
-    //setContractAddress(contractAddress);
   }
 
   return (
