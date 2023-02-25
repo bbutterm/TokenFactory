@@ -1,9 +1,8 @@
 // React App
 import React, { useState, useEffect, useRef } from 'react';
 import { ethers } from 'ethers';
-import { Button, Input } from '@skbkontur/react-ui';
 import abi from "./abi.json"
-import { TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS } from 'hardhat/builtin-tasks/task-names';
+
 const NewToken = () => {
     const [stakePercent, setStakePercent] = useState(0);
     const [stakeTerm, setStakeTerm] = useState(0);

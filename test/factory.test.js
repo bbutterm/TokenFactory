@@ -19,10 +19,6 @@ describe("TokenFactory", function () {
         console.log("success");
     })
 
-    //string memory _name,
-    //    string memory _symb,
-    //        uint256 _ownerTokens,
-    //            uint256 _systemTokens
     it("Token created!", async function () {
         token = await payments.createNewToken("TestToken", "TT", 100, 1000);
         console.log("token created", token.to)
@@ -77,7 +73,7 @@ describe("NewToken", function () {
         expect(await token.stakePercent != value);
     })
 
-    it("user stake tokens, and then take them oit", async function () {
+    it("user stake tokens, and then take them out", async function () {
         let balanceBeforeStake = 300;
         const tx = await token.transfer(acc1.address, balanceBeforeStake);
         tx.wait()
