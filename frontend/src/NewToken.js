@@ -13,10 +13,11 @@ const NewToken = () => {
     // Connect to wallet
     useEffect(() => {
         async function connect() {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            await provider.send("eth_requestAccounts", []);
-            const signer = provider.getSigner();
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            // await provider.send("eth_requestAccounts", []);
+            const signer = await provider.getSigner();
             setWallet(signer);
+            
         }
         connect()
     }, []);
@@ -65,13 +66,13 @@ const NewToken = () => {
             min = min.toString();
             setStakeMin(min);
         }
-        if (tokenContract) {
+        if (tokenContract && wallet) {
             getBalance();
             getTotalSupply();
             getStakeInfo();
             console.log(tokenBalance);
         }
-    }, [tokenContract]);
+    }, [tokenContract,wallet]);
 
 
     //Stake functions 
@@ -159,7 +160,7 @@ const NewToken = () => {
             </form>
             <h1>Payment Menu</h1>
             <button onClick={handleCheckState}>Check stake status</button>
-            <status>{stakeStatus}</status>
+            <div>{stakeStatus}</div>
             <br></br>
             <button onClick={getPayment}>Get Payment</button>
         </div>

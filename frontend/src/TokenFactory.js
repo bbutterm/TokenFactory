@@ -1,5 +1,4 @@
 // React App
-
 import React, { useState } from 'react';
 import { Contract, ethers } from 'ethers';
 import abi from "./abi2.json"
@@ -12,7 +11,7 @@ function TokenFactoryApp() {
   const [contractAddress, setContractAddress] = useState('');
 
   async function createNewToken() {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const contract = new Contract(address, abi, signer);
     const tx = await contract.createNewToke(name, symb, ownerTokens, systemTokens);
