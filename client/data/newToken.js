@@ -1,4 +1,8 @@
-[
+import { ethers } from 'ethers';
+import provider from '../walletProvider';
+
+const address = '0x8adE23ABb0d65A1a60c64a4238F91f20f0a14daF'
+const abi = [
     {
         "inputs": [
             {
@@ -527,3 +531,9 @@
         "type": "function"
     }
 ]
+const tokenContract = new ethers.Contract(
+    address, // contract address
+    abi, // contract abi
+    provider
+)
+export default tokenContract
