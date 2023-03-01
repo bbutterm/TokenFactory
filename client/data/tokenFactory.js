@@ -1,4 +1,8 @@
-[
+import provider from "../walletProvider";
+import {Contract} from "ethers"
+
+const address = "0x84CC24ADE74410149d46987C9455a434F900a92b"
+ const abi = [
     {
         "inputs": [
             {
@@ -34,3 +38,11 @@
         "type": "function"
     }
 ]
+const ethABI = [
+    "function createNewToken(string memory _name,string memory _symb,uint256 _ownerTokens,uint256 _systemTokens) public returns (address)"
+   ]
+
+
+const contractTokenFactory = new Contract(address, ethABI, provider);
+
+export default contractTokenFactory
