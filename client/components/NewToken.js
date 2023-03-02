@@ -1,23 +1,30 @@
 // React App
-import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
-import abi from "./abi.json"
+import { useState, useEffect } from 'react';
+import tokenContract from "../data/newToken";
+import provider from "../walletProvider"
 
 const NewToken = () => {
-    const address = '0x8adE23ABb0d65A1a60c64a4238F91f20f0a14daF';
+    
     //CONNECT
 
     const [wallet, setWallet] = useState();
-    const [tokenContract, setTokenContract] = useState();
     const [name, setName] = useState();
+    const [tokenBalance, setTokenBalance] = useState(0);
+    const [totalSupply, setTotalSupply] = useState(0);
+    const [stakePercent, setStakePercent] = useState(0);
+    const [stakeTerm, setStakeTerm] = useState(0);
+    const [stakeMin, setStakeMin] = useState(0);
+    const [stakeStatus, setStakeStatus] = useState(false);
+    const [currentValue, setCurrentValue] = useState(0);
+    const [stakePercentInput, setStakePercentInput] = useState();
+    const [stakeTermInput, setStakeTermInput] = useState();
+    const [stakeMinInput, setStakeMinInput] = useState();
+
     // Connect to wallet
     useEffect(() => {
-        async function connect() {
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            // await provider.send("eth_requestAccounts", []);
+        async function connect() {            
             const signer = await provider.getSigner();
             setWallet(signer);
-            
         }
         connect()
     }, []);
@@ -25,28 +32,18 @@ const NewToken = () => {
     // Connect to token contract
     useEffect(() => {
         async function connect() {
-            const tokenContract = new ethers.Contract(
-                address, // contract address
-                abi, // contract abi
-                wallet
-            );
-            setTokenContract(tokenContract);
-            setName(await tokenContract.name())
+     setName(await tokenContract.name())
         }
         connect();
 
     }, [wallet]);
 
     //GET CONTRACT INFO
-    const [tokenBalance, setTokenBalance] = useState(0);
-    const [totalSupply, setTotalSupply] = useState(0);
-    const [stakePercent, setStakePercent] = useState(0);
-    const [stakeTerm, setStakeTerm] = useState(0);
-    const [stakeMin, setStakeMin] = useState(0);
+   
     // Get token balance
     useEffect(() => {
         async function getBalance() {
-            let balance = await tokenContract.balanceOf(await wallet.getAddress());
+            let balance = await tokenContract.balanceOf(await tokenContract.getAddress());
             balance = balance.toString()
             setTokenBalance(balance);
         }
@@ -66,18 +63,17 @@ const NewToken = () => {
             min = min.toString();
             setStakeMin(min);
         }
-        if (tokenContract && wallet) {
+        if (tokenContract) {
             getBalance();
             getTotalSupply();
             getStakeInfo();
             console.log(tokenBalance);
         }
-    }, [tokenContract,wallet]);
+    });
 
 
     //Stake functions 
-    const [stakeStatus, setStakeStatus] = useState(false);
-    const [currentValue, setCurrentValue] = useState(0);
+  
     //handlers (to be refactored)
     const handleCurrentValue = (e) => {
         setCurrentValue(e.target.value);
@@ -94,10 +90,7 @@ const NewToken = () => {
         console.log(amount);
         await tokenContract.stakeCoins(amount);
     };
-    //Stake Settings
-    const [stakePercentInput, setStakePercentInput] = useState();
-    const [stakeTermInput, setStakeTermInput] = useState();
-    const [stakeMinInput, setStakeMinInput] = useState();
+    //Stake Settings  
 
     const handleSetPercentInput = async (e) => {
         e.preventDefault();
@@ -160,7 +153,7 @@ const NewToken = () => {
             </form>
             <h1>Payment Menu</h1>
             <button onClick={handleCheckState}>Check stake status</button>
-            <div>{stakeStatus}</div>
+            <status>{stakeStatus}</status>
             <br></br>
             <button onClick={getPayment}>Get Payment</button>
         </div>
