@@ -18,11 +18,18 @@ module.exports = {
       'light-green': 'rgba(231, 251, 188, 1)'
     },
     extend: {
+      display: {
+       button: ["group-hover"]
+      },
+
       fontFamily:{
       Space:['Space Mono', 'monospace']
-    }
+    },
+    backgroundImage:{
+      "leaves": "url('/data/background.jpg')"
   },
   },
   
   plugins: [],
+}
 }

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import tokenContract from "../data/newToken";
 import provider from "../walletProvider"
+import Button from "../components/comp/button";
 
 const NewToken = () => {
     
@@ -113,7 +114,7 @@ const NewToken = () => {
     };
 
     return (
-        <div>
+        <div className = 'font-Space'>
             <h1>Account INFO</h1>
             <h3>Token Name : {name}</h3>
             <h3>Total supply :{totalSupply}</h3>
@@ -152,7 +153,11 @@ const NewToken = () => {
                 <button >Stake</button>
             </form>
             <h1>Payment Menu</h1>
-            <button onClick={handleCheckState}>Check stake status</button>
+            <Button
+            buttonStyle ='connect'
+            type = 'button' 
+            text = 'Check stake status'
+            onClick={handleCheckState}></Button>
             <status>{stakeStatus}</status>
             <br></br>
             <button onClick={getPayment}>Get Payment</button>
