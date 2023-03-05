@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import tokenContract from "../data/newToken";
 import provider from "../walletProvider"
-import Button from "../components/comp/button";
+import Clue from "./Clue"
 
 const NewToken = () => {
     
@@ -17,8 +17,8 @@ const NewToken = () => {
     const [stakeMin, setStakeMin] = useState(0);
     const [stakeStatus, setStakeStatus] = useState(false);
     const [currentValue, setCurrentValue] = useState(0);
-    const [stakePercentInput, setStakePercentInput] = useState();
-    const [stakeTermInput, setStakeTermInput] = useState();
+    const [stakePercentInput, setStakePercentInput] = useState(0);
+    const [stakeTermInput, setStakeTermInput] = useState(0);
     const [stakeMinInput, setStakeMinInput] = useState();
 
     // Connect to wallet
@@ -112,56 +112,81 @@ const NewToken = () => {
             await tokenContract.getPayment();
         }
     };
+    function handleChangePolz(e){
+        setPolz(e.target.value)
+    }
 
     return (
-        <div className = 'font-Space'>
-            <h1>Account INFO</h1>
-            <h3>Token Name : {name}</h3>
-            <h3>Total supply :{totalSupply}</h3>
-            <h3>Account Balance: {tokenBalance}</h3>
-            <h1>Stake Settings(onlyowner)</h1>
-            <h4>Stake Term</h4>
-            <form onSubmit={handleSetTermInput}>
+        <div className='h-full  font-Space flex items-center w-full'>
+        <div className='flex flex-col border shadow-xl items-center ml-10 rounded-xl h-4/5 w-1/2'>  
+        <h1 className='font-bold flex justify-center mb-5 text-[30px]'>Account INFO</h1>
+        <div className='flex w-9/12 flex-col'>
+            <h3 className='font-bold flex text-[15px]'>Token Name :{name} </h3>
+            <h3 className='font-bold flex text-[15px]' >Total supply :{totalSupply}</h3>
+            <h3 className='font-bold flex text-[15px]' >Account Balance: {tokenBalance}</h3>
+        </div>
+            <h1 className='flex justify-center font-bold text-[20px]'>Stake Settings(onlyowner)</h1> 
+            <div className='flex w-9/12 flex-col'>
+            <form className='flex flex-col' onSubmit={handleSetTermInput}>
+               <h4>Stake Term</h4> 
+               <div className='flex items-center'>
                 <input
+                className='w-9 rounded-xl'
                     label="Stake Term"
                     value={stakeTermInput}
-                    onChange={(e) => setStakeTermInput(e.target.value)} />
-                <button>Set</button>
+                    onChange={(e) => setStakeTermInput(e.target.value)} /><br/>
+                    <input type="range" max="50" className=' appearance-none h-2 rounded-xl   bg-blue '  value={stakeTermInput} onChange={(e) => setStakeTermInput(e.target.value)} />
+                <button className='border bg-light-green mb-1 rounded-lg ml-5'>Set</button>
+                </div>
             </form>
             <h4>Stake Percent</h4>
-            <form onSubmit={handleSetPercentInput}>
+            <form className='flex flex-col' onSubmit={handleSetPercentInput}>
+            <div className='flex items-center'>
                 <input
+                    className='w-9 rounded-xl'
                     value={stakePercentInput}
                     onChange={(e) => setStakePercentInput(e.target.value)} />
-                <button>Set</button>
+                    <input type="range" max="50" className='bg-blue flex text-blue'  value={stakePercentInput} onChange={(e) => setStakePercentInput(e.target.value)} />
+                    <button className='border mb-1 bg-light-green  rounded-lg ml-5'>Set</button>
+                </div>
             </form>
-            <h4>Stake Minimal Count</h4>
-            <form onSubmit={handleSetMinInput}>
+            
+            <form  onSubmit={handleSetMinInput}>
+                <h4>Stake Minimal Count</h4>
+                <div className='flex'>
                 <input
+                className='border rounded-l-xl'
                     label="Stake Min"
                     value={stakeMinInput}
                     onChange={(e) => setStakeMinInput(e.target.value)} />
-                <button>Set</button>
+                <button className='border w-10 bg-light-green rounded-r-xl'>Set</button>
+                </div>
             </form>
-            <h1>Stake Tokens</h1>
-            <h4>Current Term:{stakeTerm} seconds</h4>
-            <h4>Current Percent :{stakePercent} %</h4>
-            <h4>Current Min Stake:{stakeMin} coins</h4>
-            <h3>You will get {currentValue * (stakePercent / 100)} tokens, if stake current value for {stakeTerm} minutes</h3>
+           </div>
+            <h1 className='flex justify-center text-[20px] font-bold'>Stake Tokens</h1>
+            <div className='flex w-9/12 flex-col'>
+            <h4 className='font-bold flex text-[15px]' >Current Term: {stakeTerm} seconds</h4>
+            <h4 className='font-bold flex text-[15px]' >Current Percent : {stakePercent} %</h4>
+            <h4 className='font-bold flex text-[15px]' >Current Min Stake: {stakeMin} coins</h4>
+            <Clue  text={`You will get ${currentValue * (stakePercent / 100)} tokens, if stake current value for ${stakeTerm} minutes`}>&#9773;</Clue>
             <form onSubmit={stakeCoins}>
-                <input onChange={handleCurrentValue} label={currentValue}></input>
-                <button >Stake</button>
+                {/* <h3>You will get {currentValue * (stakePercent / 100)} tokens, if stake current value for {stakeTerm} minutes</h3> */}
+                
+                <input className='border rounded-l-xl' onChange={handleCurrentValue} label={currentValue}></input>
+                <button className='border  bg-light-green rounded-r-xl' >Stake</button>
             </form>
-            <h1>Payment Menu</h1>
-            <Button
-            buttonStyle ='connect'
-            type = 'button' 
-            text = 'Check stake status'
-            onClick={handleCheckState}></Button>
-            <status>{stakeStatus}</status>
-            <br></br>
-            <button onClick={getPayment}>Get Payment</button>
-        </div>
+           </div>
+            <h1 className='flex justify-center font-bold text-[20px]'>Payment Menu</h1>
+            <div className='flex w-9/12 flex-col'>
+            <div className='flex mb-5'>
+            <button className='border bg-light-green rounded-lg'  onClick={handleCheckState}>Check stake status</button>
+            <status>{stakeStatus? (<p className='ml-10' >&#10004;</p>) : (<p className='ml-10'>&#10008;</p>)}</status>
+            </div>
+            
+            <button className='border bg-light-green rounded-lg w-1/4' onClick={getPayment}>Get Payment</button>
+            </div>
+            </div>
+            </div>
     );
 };
 

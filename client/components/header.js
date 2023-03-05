@@ -5,7 +5,7 @@ const Header = () => {
     <div className="flex p-4 bg-light-green items-center justify-around font-Space text-[20px]">
       <Link href="/">Home</Link>
       <Link href="/tokenfactory">Factory</Link>
-      <Link href="/newtoken">Token</Link>
+      <Link href="/newtoken">Tokens</Link>
       <div>
         <Button
           buttonStyle="connect"

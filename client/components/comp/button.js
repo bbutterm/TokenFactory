@@ -16,6 +16,6 @@
         );
       };
       const roundedButtonConnectWallet =
-        " min-w-xs max-w-xs transition ease-in-out delay-150  text-ellipsis overflow-hidden ... font-Space bg-sky-blue  border-2 border-blue text-md p-4 rounded-xl";
+        " min-w-xs max-w-xs transition ease-in-out delay-150  text-ellipsis overflow-hidden ... font-Space bg-sky-blue  border-2 border-blue text-xl p-4 rounded-xl";
      const desabledButton = " bg-transparent border: none !important  text-yellow font-Chewy text-xl  "
 export default Button
