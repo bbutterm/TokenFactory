@@ -2,7 +2,10 @@ import NewToken from "../components/NewToken"
 
 function Token(){
     return(
-        <NewToken />
+        <div className="h-screen">
+           <NewToken /> 
+        </div>
+        
     )
 }
 export default Token

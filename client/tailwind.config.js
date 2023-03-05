@@ -15,7 +15,8 @@ module.exports = {
       'orange':'rgba(249, 168, 11, 1)',
       'blue':'rgba(8, 200, 226, 1)',
       'sky-blue':'rgba(110, 250, 241, 1)',
-      'light-green': 'rgba(231, 251, 188, 1)'
+      'light-green': 'rgba(231, 251, 188, 1)',
+      'white':  "#ffffff"
     },
     extend: {
       fontFamily:{
