@@ -45,8 +45,8 @@ function TokenFactoryApp() {
 
   return (
     <>
-    <div className='min-h-screen flex justify-center items-center'>
-      <div className='flex flex-col shadow-2xl border p-12 rounded-xl'>
+    <div className="min-h-screen flex justify-center items-center bg-[url('../data/forest-digital-art-fantasy-art-robot.jpg')]">
+      <div className='flex flex-col shadow-2xl font-Space border p-12 rounded-xl backdrop-opacity-10 backdrop-invert bg-light-green/30 '>
         <h1 className='flex -mt-5 justify-center text-[25px] font-bold'>Create your token</h1>
       <div className='flex flex-col'>
         <label className='font-bold' htmlFor='name'>Name</label>
@@ -93,7 +93,7 @@ function TokenFactoryApp() {
         />
       </div>
       <div className='flex justify-center'>
-        <button className='border rounded-xl p-2 mt-5 bg-yellow' onClick={createNewTokenTransaction}>Create Token</button>
+        <button className=' rounded-xl p-2 mt-5 bg-orange' onClick={createNewTokenTransaction}>Create Token</button>
       </div>
       </div>
      </div>
