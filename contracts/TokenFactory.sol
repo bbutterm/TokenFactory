@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 import "./NewToken.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract TokenFactory{
     mapping(address=>address[]) public ownerToContracts;
@@ -14,10 +13,11 @@ contract TokenFactory{
         NewToken newtoken = new NewToken(_name,_symb,_ownerTokens,_systemTokens,count);
         ownerToContracts[msg.sender].push(address(newtoken));
         contractByID.push(address(newtoken));
+        address _add = address(newtoken);
         emit NewTokenCreated(address(newtoken),msg.sender,_name,_symb);
-        return(address(newtoken));
+        return(_add);
     }
-    function getAddr(address _owner) public view returns(address[] memory){
-        return(ownerToContracts[_owner]);
+    function getAddr() public view returns(address[] memory){
+        return(ownerToContracts[msg.sender]);
     }
 }
