@@ -65,13 +65,7 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_owner",
-				"type": "address"
-			}
-		],
+		"inputs": [],
 		"name": "getAddr",
 		"outputs": [
 			{
