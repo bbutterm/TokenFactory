@@ -1,14 +1,17 @@
 // React App
 import { useState, useEffect } from "react";
-import tokenContract from "../data/newToken";
-import provider from "../walletProvider";
+import walletProvider from "../walletProvider";
 import Clue from "./Clue";
 import Button from "../components/comp/button";
+import abi from "../data/newToken"
+import {Contract} from "ethers"
+import contractTokenFactory from '../data/tokenFactory'
 
 const NewToken = () => {
   //CONNECT
 
   const [wallet, setWallet] = useState();
+  const [address, setAddress] = useState([]);
   const [name, setName] = useState();
   const [tokenBalance, setTokenBalance] = useState(0);
   const [totalSupply, setTotalSupply] = useState(0);
@@ -21,10 +24,28 @@ const NewToken = () => {
   const [stakeTermInput, setStakeTermInput] = useState(0);
   const [stakeMinInput, setStakeMinInput] = useState();
 
+  useEffect(()=>{
+    (async()=>{
+
+  const signer = await walletProvider.getSigner()
+
+  const signedContract = contractTokenFactory.connect(signer);
+
+    try {      
+      setAddress(await signedContract.getAddr())
+    } catch (error) {
+      console.error(error);
+    }
+
+  })()
+},[])
+const tokensContract = address.map((adr) => new Contract(`${adr}`, abi, walletProvider));
+
+ 
   // Connect to wallet
   useEffect(() => {
     async function connect() {
-      const signer = await provider.getSigner();
+      const signer = await walletProvider.getSigner();
       setWallet(signer);
     }
     connect();
@@ -33,7 +54,7 @@ const NewToken = () => {
   // Connect to token contract
   useEffect(() => {
     async function connect() {
-      setName(await tokenContract.name());
+      setName(await tokensContract.name);
     }
     connect();
   }, [wallet]);
@@ -43,29 +64,27 @@ const NewToken = () => {
   // Get token balance
   useEffect(() => {
     async function getBalance() {
-      let balance = await tokenContract.balanceOf(
-        await tokenContract.getAddress()
-      );
-      balance = balance.toString();
+      let balance = await tokensContract.balanceOf;
+      // balance = balance.toString();
       setTokenBalance(balance);
     }
     async function getTotalSupply() {
-      const count = await tokenContract.totalSupply();
-      console.log(count.toString());
-      setTotalSupply(count.toString());
+      const count = await tokensContract.totalSupply;
+      // console.log(count.toString());
+      setTotalSupply(count);
     }
     async function getStakeInfo() {
-      let percent = await tokenContract.stakePercent();
-      percent = percent.toString();
+      let percent = await tokensContract.stakePercent;
+     
       setStakePercent(percent);
-      let term = await tokenContract.stakeTerm();
-      term = term.toString();
+      let term = await tokensContract.stakeTerm;
+      // term = term.toString();
       setStakeTerm(term);
-      let min = await tokenContract.stakeMin();
-      min = min.toString();
+      let min = await tokensContract.stakeMin;
+      // min = min.toString();
       setStakeMin(min);
     }
-    if (tokenContract) {
+    if (tokensContract) {
       getBalance();
       getTotalSupply();
       getStakeInfo();
@@ -80,7 +99,7 @@ const NewToken = () => {
     setCurrentValue(e.target.value);
   };
   const handleCheckState = async (e) => {
-    let status = await tokenContract.checkStake();
+    let status = await tokensContract.checkStake;
     setStakeStatus(status.toString());
   };
   /* global BigInt */
@@ -89,27 +108,27 @@ const NewToken = () => {
     e.preventDefault();
     const amount = BigInt(currentValue);
     console.log(amount);
-    await tokenContract.stakeCoins(amount);
+    await tokensContract.stakeCoins(amount);
   };
   //Stake Settings
 
   const handleSetPercentInput = async (e) => {
     e.preventDefault();
-    await tokenContract.stakePercentSet(stakePercentInput);
+    await tokensContract.stakePercentSet(stakePercentInput);
   };
   const handleSetTermInput = async (e) => {
     e.preventDefault();
-    await tokenContract.stakeTermSet(stakeTermInput);
+    await tokensContract.stakeTermSet(stakeTermInput);
   };
   const handleSetMinInput = async (e) => {
     e.preventDefault();
-    await tokenContract.stakeMinSet(stakeMinInput);
+    await tokensContract.stakeMinSet(stakeMinInput);
   };
   // Get payment
   const getPayment = async () => {
-    const checkStake = await tokenContract.checkStake();
+    const checkStake = await tokensContract.checkStake();
     if (checkStake) {
-      await tokenContract.getPayment();
+      await tokensContract.getPayment();
     }
   };
   function handleChangePolz(e) {
@@ -117,10 +136,13 @@ const NewToken = () => {
   }
 
   return (
+    <>
+   
+
     <div className="min-h-screen flex justify-center items-center bg-[url('../data/forest-digital-art-fantasy-art-robot.jpg')]">
       <div className="flex flex-col border  items-center font-Space p-5 ml-10 rounded-xl  w-1/2 backdrop-opacity-10 backdrop-invert bg-light-green/30 ">
         <h1 className="font-bold flex mb-5 text-[30px]">Account INFO</h1>
-
+  
         <div className="flex w-9/12 flex-col">
           <h3 className="font-bold flex text-[15px]">Token Name :{name} </h3>
           <h3 className="font-bold flex text-[15px]">
@@ -204,13 +226,15 @@ const NewToken = () => {
             <h4 className="font-bold flex text-[15px]">
               Current Min Stake: {stakeMin} coins
             </h4>
-            <Clue
+            <div className = " flex flex-row">
+            <Clue 
               text={`You will get ${
                 currentValue * (stakePercent / 100)
               } tokens, if stake current value for ${stakeTerm} minutes`}
             >
               &#9773;
             </Clue>
+            </div>
             <form onSubmit={stakeCoins}>
               {/* <h3>You will get {currentValue * (stakePercent / 100)} tokens, if stake current value for {stakeTerm} minutes</h3> */}
 
@@ -258,7 +282,9 @@ const NewToken = () => {
         </div>
       </div>
     </div>
-  );
-};
+
+  </>
+    )
+}
 
 export default NewToken;
