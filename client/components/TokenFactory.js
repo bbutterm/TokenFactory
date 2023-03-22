@@ -1,6 +1,7 @@
 // React App
 import { useState } from 'react';
 import contractTokenFactory from '../data/tokenFactory'
+import walletProvider from "../walletProvider"
 
 function TokenFactoryApp() {
   
@@ -8,22 +9,25 @@ function TokenFactoryApp() {
   const [symb, setSymb] = useState('');
   const [ownerTokens, setOwnerTokens] = useState(0);
   const [systemTokens, setSystemTokens] = useState(0);
-  const [contractAddress, setContractAddress] = useState('');
+  
 
   
 
   const createNewTokenTransaction = async (e) => {
       e.preventDefault(); 
+    const signer = await walletProvider.getSigner()
+
+    const signedContract = contractTokenFactory.connect(signer);
       try {
-        await contractTokenFactory.createNewToken(
+        await signedContract.createNewToke(
           name,
           symb,
           ownerTokens,
           systemTokens         
   
         );
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.error(error);
       }
     };
 

@@ -18,10 +18,12 @@ module.exports = {
       'light-green': 'rgba(231, 251, 188, 1)',
       'white':  "#ffffff"
     },
-    extend: {
+    extend:  {
+      display: ["group-hover"],  
       fontFamily:{
       Space:['Space Mono', 'monospace']
-    }
+    },
+  
   },
   },
   
