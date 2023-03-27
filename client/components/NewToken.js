@@ -12,17 +12,15 @@ const NewToken = () => {
 
   const [wallet, setWallet] = useState();
   const [tokenInfo, setTokenInfo] = useState();
-  const [stakePercent, setStakePercent] = useState(0);
-  const [stakeTerm, setStakeTerm] = useState(0);
-  const [stakeMin, setStakeMin] = useState(0);
-  const [stakeStatus, setStakeStatus] = useState(false);
   const [currentValue, setCurrentValue] = useState(0);
   const [stakePercentInput, setStakePercentInput] = useState(0);
   const [stakeTermInput, setStakeTermInput] = useState(0);
   const [stakeMinInput, setStakeMinInput] = useState();
   const [ownerAddress, setOwnerAddress] = useState('');
+
   const router = useRouter();
   const { item } = router.query;
+
 
   const tokensContract = new Contract(item, abi, walletProvider);
   console.log(tokensContract);
@@ -36,7 +34,9 @@ const NewToken = () => {
     }
     connect();
   }, []);
-const tokensContractWithSigner = (item, abi, wallet)
+const tokensContractWithSigner = new Contract(item, abi, wallet)
+
+
   // Connect to token contract
   useEffect(() => {
     try {
@@ -58,6 +58,8 @@ const tokensContractWithSigner = (item, abi, wallet)
   }, [wallet]);
   console.log(tokenInfo);
   console.log(ownerAddress);
+;
+
   
 
     //Stake functions
@@ -78,12 +80,12 @@ const tokensContractWithSigner = (item, abi, wallet)
     e.preventDefault();
     const amount = BigInt(currentValue);
     console.log(amount);
-    await tokensContract.stakeCoins(amount);
+    await tokensContractWithSigner.stakeCoins(amount);
   };
   //Stake Settings
   const handleChangeStakeTermInput = (e) => {
     e.preventDefault();
-  setStakeTermInput(e.target.value)
+  setStakeTermInput(Number(e.target.value))
   }
 
   const handleSetPercentInput = async (e) => {
@@ -95,25 +97,32 @@ const tokensContractWithSigner = (item, abi, wallet)
     }
   };
 
-  const handleSetTermInput = async (e) => {
-    e.preventDefault();
-    await tokensContract.stakeTermSet(stakeTermInput);
-  };
+  const handleSetTermInput = async()  => {     
+    try {
+      await tokensContractWithSigner.stakeTermSet(stakeTermInput);
+     } catch (error) {
+     console.error(error);
+   }
+ };
+
+   
+
   const handleSetMinInput = async (e) => {
     e.preventDefault();
-    await tokensContract.stakeMinSet(stakeMinInput);
+    await tokensContractWithSigner.stakeMinSet(stakeMinInput);
   };
   // Get payment
   const getPayment = async () => {
-    const checkStake = await tokensContract.checkStake();
-    if (checkStake) {
-      await tokensContract.getPayment();
+    try{
+    if (tokenInfo.status) {
+      await tokensContractWithSigner.getPayment();
     }
+  }catch (error) {
+      if (error.code === 4001) {
+        alert("You denied transaction signature");
+      }
   };
-  function handleChangePolz(e) {
-    setPolz(e.target.value);
-  }
-
+}
   return (
     <>
       <div className="min-h-screen flex justify-center items-center bg-[url('../data/forest-digital-art-fantasy-art-robot.jpg')]">
@@ -127,7 +136,7 @@ const tokensContractWithSigner = (item, abi, wallet)
               <div>
                 <h3>Token Name: {tokenInfo.name}</h3>
                 <h3>Total supply: {formatEther(tokenInfo.count)}</h3>
-                <h3>Account Balance: {formatEther(tokenInfo.balance)}</h3>
+                <h3>Account Balance for Stake: {formatEther(tokenInfo.balance)}</h3>
               </div>
             )}
           </div>
@@ -179,7 +188,7 @@ const tokensContractWithSigner = (item, abi, wallet)
               </div>
             </form>
 
-            <form onSubmit={handleSetMinInput}>
+            <form >
               <h4>Stake Minimal Count</h4>
               <div className="flex items-center ">
                 <input
@@ -198,26 +207,32 @@ const tokensContractWithSigner = (item, abi, wallet)
               Stake Tokens
             </h1>
             <div className="flex w-9/12 flex-col">
+            {!tokenInfo ? (
+              ""
+            ) :(<div>
               <h4 className="font-bold flex text-[15px]">
-                Current Term: {stakeTerm} seconds
+                Current Term: {Number(tokenInfo.term)} seconds
               </h4>
               <h4 className="font-bold flex text-[15px]">
-                Current Percent : {stakePercent} %
+                Current Percent : {Number(tokenInfo.percent)} %
               </h4>
               <h4 className="font-bold flex text-[15px]">
-                Current Min Stake: {stakeMin} coins
+                Current Min Stake: {Number(tokenInfo.min)} coins
               </h4>
+              </div>)}
               <div className=" flex flex-row">
                 <Clue
-                  text={`You will get ${
-                    currentValue * (stakePercent / 100)
-                  } tokens, if stake current value for ${stakeTerm} minutes`}
+                  text={!tokenInfo ? (
+                    ""
+                  ) :(`You will get ${
+                    currentValue * (Number(tokenInfo.percent) / 100)
+                  } tokens, if stake current value for ${Number(tokenInfo.term)} seconds`)}
                 >
                   &#9773;
                 </Clue>
               </div>
-              <form onSubmit={stakeCoins}>
-                {/* <h3>You will get {currentValue * (stakePercent / 100)} tokens, if stake current value for {stakeTerm} minutes</h3> */}
+              <form >
+                {/* <h3>You will get {currentValue * (stakePercent / 100)} tokens, if stake current value for {stakeTerm} seconds</h3> */}
 
                 <input
                   className="border rounded-l-xl text-center p-1"
@@ -242,7 +257,8 @@ const tokensContractWithSigner = (item, abi, wallet)
                   text="Check stake status"
                 />
                 <status className="ml-6">
-                  {stakeStatus ? <p>&#10004;</p> : <p>&#10008;</p>}
+                  {!tokenInfo? "": 
+                  tokenInfo.status ? <p>&#10004;</p> : <p>&#10008;</p>}
                 </status>
               </div>
               <Button
