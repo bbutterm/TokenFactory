@@ -10,6 +10,7 @@ contract NewToken is ERC20{
     uint public stakePercent =5;
     uint public stakeTerm = 5; //in seconds!
     uint public stakeMin = 100;
+    
     struct Stake{
         uint id;
         uint count;

@@ -11,6 +11,7 @@ const GetTokensFromAddress = () => {
   const [name, setName] = useState([]);
   const [address, setAddress] = useState([]);
   const [addrr, setAddrr] = useState("");
+  // const [nameArray, setNameArray] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -30,27 +31,30 @@ const GetTokensFromAddress = () => {
       (async () => {
         let tokens = [];
         for (let i = 0; i < tokensContract.length; i++) {
-          let token = {
-            name: await tokensContract[i].name(),
-          };
-          tokens.push(token);
-        }
-        console.log(tokens);
-        setName(tokens);
-      })();
+          let token = await tokensContract[i].name()     
+          tokens.push(token)
+          setName(tokens)
+          console.log(name);
+     } })();
+
     } catch (err) {
       console.error(err);
     }
+    ;
+ 
   }, [address]);
-
+ 
   function info(index = 0) {
     setAddrr(address[index]); // Тут получаем индекс из кнопки и передаём переменной addrr элемент массива address
   }
 
   const url = "https://goerli.etherscan.io/address/" + `${addrr}`;
 
+
   console.log(address);
-  console.log(url);
+  console.log(name);
+  
+
   return (
     <>
       <div className="min-h-screen flex justify-center items-center bg-[url('../data/forest-digital-art-fantasy-art-robot.jpg')]">
@@ -58,9 +62,9 @@ const GetTokensFromAddress = () => {
           <h1 className="font-bold flex mb-5 text-[30px]">Your tokens:</h1>
 
           <div className="flex  flex-col ">
-                     {name.map((item, index) => (
-              <ul className="m-2  font-Space text-center text-[20px] ">
-                {item.name}
+                     {address.map((item, index) => (
+              <ul key = {index} className="m-2  font-Space text-center text-[20px] ">
+               {name[index]}
 
                 <div className="flex flex-row mt-2 " >
                <div>
@@ -68,6 +72,7 @@ const GetTokensFromAddress = () => {
                     className="  bg-light-green rounded-md"        
                     onClick={() => info(index)}
                     href={url}
+                   
                   >
                     <Image
                       className="w-12 h-12 rounded-md"
@@ -80,8 +85,9 @@ const GetTokensFromAddress = () => {
                   <div className = "ml-5 mt-2">
                   <Link
                     className="p-2 border  bg-light-green rounded-md"
-                    href="/newtokens"
-                    address={addrr}
+                    onClick={() => info(index)}
+                    href= {{pathname:"/newtokens", query: {item}}}
+                   
                   >
                     Info
                   </Link>
