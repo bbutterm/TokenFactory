@@ -4,7 +4,7 @@ import "./NewToken.sol";
 
 contract TokenFactory{
     mapping(address=>address[]) public ownerToContracts;
-    address[] contractByID;
+    address[] public contractByID;
     event NewTokenCreated(address _tokenAddr,address _owner, string indexed  _TokenName,string indexed _TokenSymb);
     uint count = 0;
 
@@ -19,5 +19,8 @@ contract TokenFactory{
     }
     function getAddr() public view returns(address[] memory){
         return(ownerToContracts[msg.sender]);
+    }
+    function getContracts() public view returns(address [] memory){
+        return(contractByID);
     }
 }
