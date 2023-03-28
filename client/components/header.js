@@ -3,14 +3,9 @@ import Link from "next/link";
 import Button from "./comp/button";
 
 const Header = () => {
-  const [currentAccount, setCurrentAccount] = useState(() => {
-    return 
-    JSON.parse(localStorage.getItem("currentAccount"))
-  })
-console.log(currentAccount)
-  useEffect(() => {
-    localStorage.setItem("currentAccount", JSON.stringify(currentAccount))
-  }, [currentAccount]) 
+  const [currentAccount, setCurrentAccount] = useState()
+
+ 
 
   const onClickConnect = async () => {
     let signer = null;

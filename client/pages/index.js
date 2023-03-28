@@ -23,23 +23,17 @@ function HomePage() {
     <>
       <div className=" flex  justify-center items-center bg-[url('../data/1614407098_44-p-skazochnii-temnii-fon-48.jpg')] bg-cover h-screen">
         <Link
-          onMouseEnter={onMouseEnterHandlerLeft}
-          onMouseLeave={onMouseLeaveHandlerLeft}
-          className=" bg-yellow p-4 rounded-full mr-12 mt-10 animate-pulse hover:bg-sky-blue"
+          className=" bg-gradient-to-t from-yellow via-orange to-white p-2 rounded-full mr-12 mt-12 transform motion-safe:hover:scale-110 "
           href="/tokenfactory"
         >
-          {showButtonLeft && <div className="font-Space">Create token</div>}
+          <div className="font-Space">Create token</div>
         </Link>
 
         <Link
-          onMouseEnter={onMouseEnterHandlerRight}
-          onMouseLeave={onMouseLeaveHandlerRight}
-          className=" bg-yellow p-6 rounded-full ml-12 mb-12 animate-pulse hover:bg-sky-blue "
+          className="bg-gradient-to-t from-yellow via-orange to-white  p-2 rounded-full ml-12 mb-12 transform motion-safe:hover:scale-110 "
           href="/alltokens"
         >
-          {showButtonRight && (
-            <div className="font-Space">Management tokens</div>
-          )}
+          <div className="font-Space">Management tokens</div>
         </Link>
       </div>
     </>
