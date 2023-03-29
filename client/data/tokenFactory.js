@@ -1,7 +1,7 @@
 import walletProvider from "../walletProvider";
 import {Contract} from "ethers"
 
-const address = "0x253E9d9F3d36D1749eB65d5832e7c46E046FdDd9"
+const address = "0x472CA6ef322C6204bf0eB339CD9b42568A6b1eB0"
  const abi = [
 	{
 		"anonymous": false,
