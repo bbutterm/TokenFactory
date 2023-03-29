@@ -27,6 +27,7 @@ const GetTokensFromAddress = () => {
   );
 
   useEffect(() => {
+    if(address.length !==0){
     try {
       (async () => {
         let tokens = [];
@@ -39,13 +40,14 @@ const GetTokensFromAddress = () => {
     } catch (err) {
       console.error(err);
     }
+  }
   }, [address]);
   console.log(name);
   function info(index = 0) {
     setAddrr(address[index]); // Тут получаем индекс из кнопки и передаём переменной addrr элемент массива address
   }
 
-  const url = "https://goerli.etherscan.io/address/" + `${addrr}`;
+  const url = "https://mumbai.polygonscan.com/address/" + `${addrr}`;
 
   console.log(address);
   console.log(name);

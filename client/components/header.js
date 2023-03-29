@@ -3,9 +3,12 @@ import Link from "next/link";
 import Button from "./comp/button";
 
 const Header = () => {
-  const [currentAccount, setCurrentAccount] = useState()
+  const [currentAccount, setCurrentAccount] =useState();
 
- 
+
+
+
+console.log(currentAccount)
 
   const onClickConnect = async () => {
     let signer = null;
