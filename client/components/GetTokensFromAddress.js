@@ -84,7 +84,8 @@ const GetTokensFromAddress = () => {
                       <Link
                         className=" border p-1  text-[15px] bg-light-green rounded-md"
                         onClick={() => info(index)}
-                        href={{ pathname: "/newtokens", query: { item } }}
+                        href={{pathname:"/allTokens/newtoken",
+                        query:{address:`${item}`}}}
                       >
                         Info
                       </Link>

@@ -51,7 +51,7 @@ console.log(currentAccount)
     <div className="flex p-4 bg-light-green items-center justify-around font-Space text-[20px]">
       <Link href="/">Home</Link>
       <Link href="/tokenfactory">Factory</Link>
-      <Link href="/alltokens">Tokens</Link>
+      <Link href="/allTokens">Tokens</Link>
       <div>
         <Button
           buttonStyle="connect"
