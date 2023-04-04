@@ -1,13 +1,27 @@
+// import NewToken from "../components/NewToken"
+
+// function Token(){
+//     return(
+//     <>
+//         <div className="h-screen">
+     
+//            <NewToken /> 
+//         </div>
+//         </>  
+//     )
+// }
+// export default Token
 // React App
 import { useState, useEffect } from "react";
-import walletProvider from "../walletProvider";
-import Clue from "./Clue";
-import Button from "../components/comp/button";
-import abi from "../data/newToken";
+import walletProvider from "../../walletProvider";
+import Clue from "../../components/Clue";
+import Button from "../../components/comp/button";
+import abi from "../../data/newToken";
 import { Contract, formatEther } from "ethers";
 import { useRouter } from "next/router";
+import contractTokenFactory from "../../data/tokenFactory";
 
-const NewToken = ( ) => {
+const NewToken = ({address}) => {
   //CONNECT
 
   const [wallet, setWallet] = useState();
@@ -18,13 +32,10 @@ const NewToken = ( ) => {
   const [stakeMinInput, setStakeMinInput] = useState();
   const [ownerAddress, setOwnerAddress] = useState('');
 
-  const router = useRouter();
-  console.log(router)
-  const {item}  = router.query
+ 
   
 
-
-  const tokensContract = new Contract(item, abi, walletProvider);
+  const tokensContract = new Contract(address, abi, walletProvider);
   console.log(tokensContract);
 
   // Connect to wallet
@@ -36,7 +47,7 @@ const NewToken = ( ) => {
     }
     connect();
   }, []);
- const tokensContractWithSigner = new Contract(item, abi, wallet)
+const tokensContractWithSigner = new Contract(address, abi, wallet)
 
 
   // Connect to token contract
@@ -45,7 +56,7 @@ const NewToken = ( ) => {
       (async () => {
         let token = {
           name: await tokensContract.name(),
-          balance: await tokensContract.balanceOf(item),
+          balance: await tokensContract.balanceOf(address),
           count: await tokensContract.totalSupply(),
           percent: await tokensContract.stakePercent(),
           term: await tokensContract.stakeTerm(),
@@ -276,5 +287,13 @@ const NewToken = ( ) => {
     </>
   );
 };
+
+export async function getServerSideProps(context) {
+  const address = context.query.address
+  return {
+    props: {address: address}, 
+  }
+}
+
 
 export default NewToken;

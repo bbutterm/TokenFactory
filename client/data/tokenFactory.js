@@ -108,7 +108,8 @@ const address = "0x472CA6ef322C6204bf0eB339CD9b42568A6b1eB0"
 ]
 const ethABI = [
     "function createNewToke(string memory _name,string memory _symb,uint _ownerTokens,uint _systemTokens) public returns(address)",
-    "function getAddr() public view returns(address[] memory)"
+    "function getAddr() public view returns(address[] memory)",
+	"function getContracts() public view returns(address [] memory)"
    ]
 
 const contractTokenFactory = new Contract(address, ethABI, walletProvider);
