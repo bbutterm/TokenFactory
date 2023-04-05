@@ -3,12 +3,21 @@ import Link from "next/link";
 import Button from "./comp/button";
 
 const Header = () => {
-  const [currentAccount, setCurrentAccount] =useState();
+  const [currentAccount, setCurrentAccount] =useState('');
+
+
+  useEffect(() => {
+    // Perform localStorage action
+    const item = localStorage.getItem('key')
+    setCurrentAccount(item)
+   
+  }, [])
 
 
 
 
-console.log(currentAccount)
+console.log('currentAccount',currentAccount)
+
 
   const onClickConnect = async () => {
     let signer = null;
@@ -24,9 +33,11 @@ console.log(currentAccount)
         const accounts = await window.ethereum
           .request({
             method: "eth_requestAccounts",
+           
           })
-          .then((res) => {
-            setCurrentAccount(res);
+          .then((res) => {            
+            localStorage.setItem('key',res)
+       
           });
         if (currentAccount) {
           alert("Successfully log in MetaMask");
@@ -58,12 +69,10 @@ console.log(currentAccount)
           type="button"
           onClick={onClickConnect }
           text={
-            !currentAccount
+            (!currentAccount)
               ? "Connect your wallet"
-              : `${currentAccount.map(
-                  (account) =>
-                    account.substring(0, 5) + "....." + account.slice(37)
-                )}`
+              : `${currentAccount.substring(0, 5) + "....." + currentAccount.slice(37)
+                }`
               }        
         />
       </div>
