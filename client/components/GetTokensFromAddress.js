@@ -54,7 +54,7 @@ const GetTokensFromAddress = () => {
 
   return (
     <>
-      <div className="min-h-screen flex justify-center items-center bg-[url('../data/forest-digital-art-fantasy-art-robot.jpg')]">
+      
         <div className="flex flex-col border  items-center font-Space p-5 ml-10 rounded-xl  w-20% backdrop-opacity-10 backdrop-invert bg-light-green/30 ">
           <h1 className="font-bold flex mb-5 text-[30px]">Your tokens:</h1>
           {address.length === 0 ? (
@@ -96,7 +96,7 @@ const GetTokensFromAddress = () => {
             </div>
           )}
         </div>
-      </div>
+      
     </>
   );
 };
