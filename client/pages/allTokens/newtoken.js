@@ -20,6 +20,7 @@ import abi from "../../data/newToken";
 import { Contract, formatEther } from "ethers";
 import { useRouter } from "next/router";
 import contractTokenFactory from "../../data/tokenFactory";
+import FunctionOnlyOwner from "../../components/finctionForOwner";
 
 const NewToken = ({address}) => {
   //CONNECT
@@ -31,21 +32,35 @@ const NewToken = ({address}) => {
   const [stakeTermInput, setStakeTermInput] = useState(0);
   const [stakeMinInput, setStakeMinInput] = useState();
   const [ownerAddress, setOwnerAddress] = useState('');
-
+  const [user,setUser] = useState();
+  const [time,setTime] = useState(3600);
  
+   console.log(ownerAddress,  tokenInfo?.owner,"1111111111111111111111111111111111111111111111111111111")
+  // console.log("owner:",ownerOfContract)
   
 
   const tokensContract = new Contract(address, abi, walletProvider);
-  console.log(tokensContract);
+  
 
   // Connect to wallet
   useEffect(() => {
     async function connect() {
       const signer = await walletProvider.getSigner();
+      
       setWallet(signer);
+      await window.ethereum
+      .request({
+        method: "eth_requestAccounts",
+      })
+      .then((res) => {            
+      setUser(res)
+      });
       setOwnerAddress(signer.address)
+      
     }
     connect();
+   
+    
   }, []);
 const tokensContractWithSigner = new Contract(address, abi, wallet)
 
@@ -62,6 +77,7 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
           term: await tokensContract.stakeTerm(),
           min: await tokensContract.stakeMin(),
           status: await tokensContract.checkStake(),
+          owner: await tokensContract.owner()
         };
         setTokenInfo(token);
       })();
@@ -70,7 +86,7 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
     }
   }, [wallet]);
   console.log(tokenInfo);
-  console.log(ownerAddress);
+  console.log(ownerAddress,"ownerAddress");
 ;
 
   
@@ -112,7 +128,9 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
 
   const handleSetTermInput = async()  => {     
     try {
-      await tokensContractWithSigner.stakeTermSet(stakeTermInput);
+      let times = Number.parseInt(time,10)
+      console.log(times * stakeTermInput)
+      await tokensContractWithSigner.stakeTermSet(stakeTermInput * times);
      } catch (error) {
      console.error(error);
    }
@@ -136,95 +154,55 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
       }
   };
 }
+function handleSetTime(e){
+  setTime(e.target.value)
+}
+
   return (
     <>
-      <div className="min-h-screen flex justify-center items-center bg-[url('../data/forest-digital-art-fantasy-art-robot.jpg')]">
-        <div className="flex flex-col border  items-center font-Space p-5 ml-10 rounded-xl  w-1/2 backdrop-opacity-10 backdrop-invert bg-light-green/30 ">
+      <div className="min-h-screen  flex justify-center items-center bg-[url('../data/forest-digital-art-fantasy-art-robot.jpg')]">
+        <div className="flex flex-col  items-center font-Space p-5 ml-10 rounded-xl border  w-2/5 backdrop-opacity-10 backdrop-invert bg-light-green/30 ">
           <h1 className="font-bold flex mb-5 text-[30px]">Account INFO</h1>
 
-          <div className="flex w-9/12 flex-col font-bold text-[15px]">
+          <div className="flex w-10/12 flex-col   font-bold text-[15px]">
             {!tokenInfo ? (
               ""
             ) : (
-              <div>
+              <div >
                 <h3>Token Name: {tokenInfo.name}</h3>
                 <h3>Total supply: {formatEther(tokenInfo.count)}</h3>
                 <h3>Account Balance for Stake: {formatEther(tokenInfo.balance)}</h3>
+                
               </div>
             )}
           </div>
-
-          <h1 className="flex font-bold text-[20px]">
-            Stake Settings(onlyowner)
-          </h1>
-
-          <div className="flex w-9/12 flex-col">
-            <form className="flex flex-col" >
-              <h4>Stake Term</h4>
-              <div className="flex items-center">
-                <input
-                  className="w-9  text-center rounded-xl"
-                  label="Stake Term"
-                  value={stakeTermInput}
-                  onChange={handleChangeStakeTermInput}
-                />
-                <br />
-                <input
-                  type="range"
-                  max="50"
-                  className=" appearance-none h-2 rounded-xl   bg-blue "
-                  value={stakeTermInput}
-                  onChange={handleChangeStakeTermInput}
-                />
-                <Button buttonStyle="light" type="button" text="Set Term"
-                onClick = {handleSetTermInput} />
-              </div>
-            </form>
-
-            <h4>Stake Percent</h4>
-            <form className="flex flex-col ">
-              <div className="flex items-center ">
-                <input
-                  className="w-9 text-center rounded-xl"
-                  value={stakePercentInput}
-                  onChange={(e) => setStakePercentInput(e.target.value)}
-                />
-                <input
-                  type="range"
-                  max="50"
-                  className="bg-blue flex text-blue"
-                  value={stakePercentInput}
-                  onChange={(e) => setStakePercentInput(e.target.value)}
-                />
-                <Button buttonStyle="light" type="button" text="Set Percent"
-                onClick = {handleSetPercentInput} />
-              </div>
-            </form>
-
-            <form >
-              <h4>Stake Minimal Count</h4>
-              <div className="flex items-center ">
-                <input
-                  className="border rounded-l-xl p-1 text-center"
-                  label="Stake Min"
-                  value={stakeMinInput}
-                  onChange={handleChangeMinInput}
-                />
-                <button className="border  bg-light-green p-1 rounded-r-xl">
-                  Set Count
-                </button>
-              </div>
-            </form>
-
+          <h1 className="w-10/12">{ownerAddress ===  tokenInfo?.owner?(
+          
+            <FunctionOnlyOwner 
+            stakeTermInput={stakeTermInput}
+            onChangeStakeTermInput={handleChangeStakeTermInput}
+            onSetTermInput={handleSetTermInput}
+            stakePercentInput={stakePercentInput}
+            onStakePercentInput={setStakePercentInput}
+            handleSetPercentInput={handleSetPercentInput}
+            stakeMinInput={stakeMinInput}
+            onChangeMinInput={handleChangeMinInput}
+            onSetTime={handleSetTime}
+            
+            />
+           
+            
+          ):("You are not an owner")}</h1>
+               {console.log(time,"0000000000000700000000")}
             <h1 className="flex justify-center text-[20px] font-bold">
               Stake Tokens
             </h1>
-            <div className="flex w-9/12 flex-col">
+            <div className="flex  w-10/12 flex-col">
             {!tokenInfo ? (
               ""
             ) :(<div>
               <h4 className="font-bold flex text-[15px]">
-                Current Term: {Number(tokenInfo.term)} seconds
+                Current Term: {Number(tokenInfo.term / 60 / 60)} hours
               </h4>
               <h4 className="font-bold flex text-[15px]">
                 Current Percent : {Number(tokenInfo.percent)} %
@@ -248,7 +226,7 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
                 {/* <h3>You will get {currentValue * (stakePercent / 100)} tokens, if stake current value for {stakeTerm} seconds</h3> */}
 
                 <input
-                  className="border rounded-l-xl text-center p-1"
+                  className=" rounded-l-xl text-center p-1"
                   onChange={handleCurrentValue}
                   label={currentValue}
                 ></input>
@@ -258,7 +236,7 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
               </form>
             </div>
 
-            <div className="flex flex-col m-1">
+            <div className="flex  w-10/12 flex-col m-1">
               <h1 className=" font-bold text-[20px] text-center">
                 Payment Menu
               </h1>
@@ -283,7 +261,6 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 };

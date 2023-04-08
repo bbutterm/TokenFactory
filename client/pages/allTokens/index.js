@@ -69,9 +69,9 @@ function AllTokens(){
      
      <div className=" items-center  text-[35px] flex justify-center mb-3  w-full h-1/3">
         <div className="bg-light-green/30 w-1/3 justify-center flex border font-Space rounded-xl backdrop-opacity-10 backdrop-invert">
-          <button  onClick={handleClickAllTokens}>AllTokens</button>
+          <button className="bg-yellow/20 rounded-xl "  onClick={handleClickAllTokens}>AllTokens</button>
           <h1 className="mr-4 ml-4">|</h1>
-          <button onClick={handleClickYourTokens}>YourTokens</button>   
+          <button className="bg-yellow/20 rounded-xl" onClick={handleClickYourTokens}>YourTokens</button>   
         </div>
          
      </div>
