@@ -202,7 +202,7 @@ function handleSetTime(e){
               ""
             ) :(<div>
               <h4 className="font-bold flex text-[15px]">
-                Current Term: {Number(tokenInfo.term / 60 / 60)} hours
+                Current Term: {(Number(tokenInfo.term )/ 60 / 60)} hours
               </h4>
               <h4 className="font-bold flex text-[15px]">
                 Current Percent : {Number(tokenInfo.percent)} %
