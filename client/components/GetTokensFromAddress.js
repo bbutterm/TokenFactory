@@ -3,9 +3,8 @@ import contractTokenFactory from "../data/tokenFactory";
 import walletProvider from "../walletProvider";
 import abi from "../data/newToken";
 import { Contract } from "ethers";
-import etherscan from "../data/logo_etherscan.png";
 import Link from "next/link";
-import Image from "next/image";
+
 
 const GetTokensFromAddress = () => {
   const [name, setName] = useState([]);
