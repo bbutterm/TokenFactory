@@ -1,17 +1,3 @@
-// import NewToken from "../components/NewToken"
-
-// function Token(){
-//     return(
-//     <>
-//         <div className="h-screen">
-     
-//            <NewToken /> 
-//         </div>
-//         </>  
-//     )
-// }
-// export default Token
-// React App
 import { useState, useEffect } from "react";
 import walletProvider from "../../walletProvider";
 import Clue from "../../components/Clue";
@@ -21,6 +7,7 @@ import { Contract, formatEther } from "ethers";
 import { useRouter } from "next/router";
 import contractTokenFactory from "../../data/tokenFactory";
 import FunctionOnlyOwner from "../../components/finctionForOwner";
+import addTokenInMetomask from "../../components/addTokenInMetomask";
 
 const NewToken = ({address}) => {
   //CONNECT
@@ -34,8 +21,9 @@ const NewToken = ({address}) => {
   const [ownerAddress, setOwnerAddress] = useState('');
   const [user,setUser] = useState();
   const [time,setTime] = useState(3600);
+  const [period,setPeriod] = useState(60);
  
-   console.log(ownerAddress,  tokenInfo?.owner,"1111111111111111111111111111111111111111111111111111111")
+   
   // console.log("owner:",ownerOfContract)
   
 
@@ -71,6 +59,8 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
       (async () => {
         let token = {
           name: await tokensContract.name(),
+          symbol: await tokensContract.symbol(),
+          decimals: await tokensContract.decimals(),
           balance: await tokensContract.balanceOf(address),
           count: await tokensContract.totalSupply(),
           percent: await tokensContract.stakePercent(),
@@ -157,6 +147,10 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
 function handleSetTime(e){
   setTime(e.target.value)
 }
+function handleSetPeriod(e){
+  let time = Number(e.target.value)
+  setPeriod(time)
+}
 
   return (
     <>
@@ -202,8 +196,16 @@ function handleSetTime(e){
               ""
             ) :(<div>
               <h4 className="font-bold flex text-[15px]">
-                Current Term: {(Number(tokenInfo.term )/ 60 / 60)} hours
+                Current Term: {(Number(tokenInfo.term) / period).toFixed(2)} 
+                <select className="ml-2 bg-light-green/30 rounded-xl backdrop-opacity-10 backdrop-invert" onChange={handleSetPeriod}>
+                <option value="60">minutes </option>
+                <option value="3600"> hours </option>
+                <option value="86400"> day</option>
+                <option value="604800"> week</option>
+                <option value="2592000"> mounth</option>
+              </select>
               </h4>
+              
               <h4 className="font-bold flex text-[15px]">
                 Current Percent : {Number(tokenInfo.percent)} %
               </h4>
@@ -257,6 +259,12 @@ function handleSetTime(e){
                 type="button"
                 text="Get Payment"
                 onClick={getPayment}
+              />
+              <Button
+                buttonStyle="casual"
+                type="button"
+                text="Add token"
+                onClick={()=>addTokenInMetomask(address,tokenInfo.symbol,tokenInfo.decimals)}
               />
             </div>
           </div>
