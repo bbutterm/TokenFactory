@@ -4,8 +4,6 @@ import Clue from "../../components/Clue";
 import Button from "../../components/comp/button";
 import abi from "../../data/newToken";
 import { Contract, formatEther } from "ethers";
-import { useRouter } from "next/router";
-import contractTokenFactory from "../../data/tokenFactory";
 import FunctionOnlyOwner from "../../components/finctionForOwner";
 import addTokenInMetomask from "../../components/addTokenInMetomask";
 
@@ -22,13 +20,9 @@ const NewToken = ({address}) => {
   const [user,setUser] = useState();
   const [time,setTime] = useState(3600);
   const [period,setPeriod] = useState(60);
- 
-   
-  // console.log("owner:",ownerOfContract)
-  
+  const [balance, setBalance] = useState();
 
-  const tokensContract = new Contract(address, abi, walletProvider);
-  
+  const tokensContract = new Contract(address, abi, walletProvider);  
 
   // Connect to wallet
   useEffect(() => {
@@ -46,12 +40,10 @@ const NewToken = ({address}) => {
       setOwnerAddress(signer.address)
       
     }
-    connect();
-   
-    
+    connect();    
   }, []);
-const tokensContractWithSigner = new Contract(address, abi, wallet)
 
+const tokensContractWithSigner = new Contract(address, abi, wallet)
 
   // Connect to token contract
   useEffect(() => {
@@ -61,7 +53,6 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
           name: await tokensContract.name(),
           symbol: await tokensContract.symbol(),
           decimals: await tokensContract.decimals(),
-          balance: await tokensContract.balanceOf(address),
           count: await tokensContract.totalSupply(),
           percent: await tokensContract.stakePercent(),
           term: await tokensContract.stakeTerm(),
@@ -75,15 +66,22 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
       console.error(err);
     }
   }, [wallet]);
-  console.log(tokenInfo);
-  console.log(ownerAddress,"ownerAddress");
-;
 
-  
+  useEffect(() => {
+    try {
+      (async () => {
+        if (ownerAddress) {
+          const ownerBalance = await tokensContract.balanceOf(ownerAddress);
+          setBalance(ownerBalance);
+        }
+      })();
+    } catch (err) {
+      console.error(err);
+    }
+  });
+  //Stake functions
 
-    //Stake functions
 
-  //handlers (to be refactored)
   const handleCurrentValue = (e) => {
     setCurrentValue(e.target.value);
   };
@@ -93,7 +91,7 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
     }
  setStakeMinInput(e.target.value)
   }
-  /* global BigInt */
+
   // Stake tokens
   const stakeCoins = async (e) => {
     e.preventDefault();
@@ -101,12 +99,12 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
     console.log(amount);
     await tokensContractWithSigner.stakeCoins(amount);
   };
+
   //Stake Settings
   const handleChangeStakeTermInput = (e) => {
     e.preventDefault();
   setStakeTermInput(Number(e.target.value))
   }
-
   const handleSetPercentInput = async (e) => {
     e.preventDefault();    
      try {
@@ -115,7 +113,6 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
       console.error(error);
     }
   };
-
   const handleSetTermInput = async()  => {     
     try {
       let times = Number.parseInt(time,10)
@@ -130,7 +127,11 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
 
   const handleSetMinInput = async (e) => {
     e.preventDefault();
+    try {
     await tokensContractWithSigner.stakeMinSet(stakeMinInput);
+  } catch (error) {
+    console.error(error);
+  }
   };
   // Get payment
   const getPayment = async () => {
@@ -165,14 +166,13 @@ function handleSetPeriod(e){
               <div >
                 <h3>Token Name: {tokenInfo.name}</h3>
                 <h3>Total supply: {formatEther(tokenInfo.count)}</h3>
-                <h3>Account Balance for Stake: {formatEther(tokenInfo.balance)}</h3>
-                
-              </div>
+               </div>
             )}
           </div>
           <h1 className="w-10/12">{ownerAddress ===  tokenInfo?.owner?(
           
             <FunctionOnlyOwner 
+            getBalance={balance}
             stakeTermInput={stakeTermInput}
             onChangeStakeTermInput={handleChangeStakeTermInput}
             onSetTermInput={handleSetTermInput}
@@ -180,7 +180,8 @@ function handleSetPeriod(e){
             onStakePercentInput={setStakePercentInput}
             handleSetPercentInput={handleSetPercentInput}
             stakeMinInput={stakeMinInput}
-            onChangeMinInput={handleChangeMinInput}
+            onStakeMinInput = {setStakeMinInput}
+            handleSetMinInput={handleSetMinInput}
             onSetTime={handleSetTime}
             
             />
@@ -225,14 +226,14 @@ function handleSetPeriod(e){
                 </Clue>
               </div>
               <form >
-                {/* <h3>You will get {currentValue * (stakePercent / 100)} tokens, if stake current value for {stakeTerm} seconds</h3> */}
-
+                
                 <input
                   className=" rounded-l-xl text-center p-1"
                   onChange={handleCurrentValue}
                   label={currentValue}
                 ></input>
-                <button className="border  bg-light-green rounded-r-xl p-1">
+                <button className="border  bg-light-green rounded-r-xl p-1"
+                onClick = {stakeCoins}>
                   Stake
                 </button>
               </form>
