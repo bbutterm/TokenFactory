@@ -6,11 +6,12 @@ import { Contract } from "ethers";
 import Link from "next/link";
 
 
+
 const GetTokensFromAddress = () => {
   const [name, setName] = useState([]);
   const [address, setAddress] = useState([]);
   const [addrr, setAddrr] = useState("");
-  // const [nameArray, setNameArray] = useState([]);
+ const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -26,6 +27,7 @@ const GetTokensFromAddress = () => {
   );
 
   useEffect(() => {
+    setLoader(true)
     if(address.length !==0){
     try {
       (async () => {
@@ -35,36 +37,38 @@ const GetTokensFromAddress = () => {
           tokens.push(token);
         }
         setName(tokens);
+        setLoader(false)
       })();
     } catch (err) {
+      setLoader(false)
       console.error(err);
     }
   }
   }, [address]);
-  console.log(name);
+
   function info(index = 0) {
     setAddrr(address[index]); // Тут получаем индекс из кнопки и передаём переменной addrr элемент массива address
   }
-
   const url = "https://mumbai.polygonscan.com/address/" + `${addrr}`;
-
-  console.log(address);
-  console.log(name);
 
   return (
     <>
       
         <div className="flex flex-col border  items-center font-Space p-5 ml-10 rounded-xl  w-20% backdrop-opacity-10 backdrop-invert bg-light-green/30 ">
+          
+       
           <h1 className="font-bold flex mb-5 text-[30px]">Your tokens:</h1>
-          {address.length === 0 ? (
+          
+          { address.length === 0? (
             <Link
               className="rounded-xl p-2 mt-5 bg-orange"
               href="/tokenfactory"
             >
               Create your token
             </Link>
-          ) : (
-            <div className="flex  flex-col ">
+          ) : (<div className="flex  flex-col ">
+            
+              
               {address.map((item, index) => (
                 <ul
                   key={index}
@@ -73,6 +77,7 @@ const GetTokensFromAddress = () => {
                   {name[index]}
 
                   <div className="flex flex-row mt-2 ">
+
                     <div className=" font-bold text-[15px] underline" >
                       <Link onClick={() => info(index)} href={url}>
                       {item}
@@ -89,13 +94,15 @@ const GetTokensFromAddress = () => {
                         Info
                       </Link>
                     </div>
+                    
                   </div>
                 </ul>
               ))}
+          
             </div>
           )}
-        </div>
-      
+              
+        </div>      
     </>
   );
 };

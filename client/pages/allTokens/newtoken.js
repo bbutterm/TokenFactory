@@ -20,7 +20,8 @@ const NewToken = ({address}) => {
   const [user,setUser] = useState();
   const [time,setTime] = useState(3600);
   const [period,setPeriod] = useState(60);
-  const [balance, setBalance] = useState();
+  const [balance, setBalance] = useState();  
+  const [loader, setLoader]= useState(false)
 
   const tokensContract = new Contract(address, abi, walletProvider);  
 
@@ -47,6 +48,7 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
 
   // Connect to token contract
   useEffect(() => {
+    setLoader(true)
     try {
       (async () => {
         let token = {
@@ -61,8 +63,10 @@ const tokensContractWithSigner = new Contract(address, abi, wallet)
           owner: await tokensContract.owner()
         };
         setTokenInfo(token);
+        setLoader(false)
       })();
     } catch (err) {
+      setLoader(false)
       console.error(err);
     }
   }, [wallet]);
@@ -156,6 +160,11 @@ function handleSetPeriod(e){
   return (
     <>
       <div className="min-h-screen  flex justify-center items-center bg-[url('../data/forest-digital-art-fantasy-art-robot.jpg')]">
+      {loader === true ? 
+        (<div className="h-60 w-60 ">
+          <img src ="/loaderImage.gif" alt = 'loader'/> </div>)
+  :
+ 
         <div className="flex flex-col  items-center font-Space p-5 ml-10 rounded-xl border  w-2/5 backdrop-opacity-10 backdrop-invert bg-light-green/30 ">
           <h1 className="font-bold flex mb-5 text-[30px]">Account INFO</h1>
 
@@ -255,6 +264,7 @@ function handleSetPeriod(e){
                   tokenInfo.status ? <p>&#10004;</p> : <p>&#10008;</p>}
                 </status>
               </div>
+              <div className = "flex flex-row justify-between">
               <Button
                 buttonStyle="casual"
                 type="button"
@@ -262,13 +272,15 @@ function handleSetPeriod(e){
                 onClick={getPayment}
               />
               <Button
-                buttonStyle="casual"
+                buttonStyle="add"
                 type="button"
-                text="Add token"
+                text="Add token to Metamask"
                 onClick={()=>addTokenInMetomask(address,tokenInfo.symbol,tokenInfo.decimals)}
               />
+              </div>
             </div>
           </div>
+}          
         </div>
     </>
   );
