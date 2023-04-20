@@ -16,7 +16,8 @@ module.exports = {
       'blue':'rgba(8, 200, 226, 1)',
       'sky-blue':'rgba(110, 250, 241, 1)',
       'light-green': 'rgba(231, 251, 188, 1)',
-      'white':  "#ffffff"
+      'white':  "#ffffff",
+      'teal-400':'rgba(146, 183, 169, 1)'
     },
     extend:  {
       display: ["group-hover"],  

@@ -6,7 +6,8 @@
                 buttonStyle === "connect" ? roundedButtonConnectWallet : null||
                 buttonStyle === "desabled" ? desabledButton : null||
                 buttonStyle === "casual" ? casualButton: null||
-                buttonStyle === "light" ? casualButtonLight: null
+                buttonStyle === "light" ? casualButtonLight: null||
+                buttonStyle === "add" ? casualButtonAdd: null
               }
               type={type}
               onClick={onClick}
@@ -24,4 +25,5 @@
 
 const casualButton =  " min-w-xs max-w-xs transition ease-in-out delay-150  text-ellipsis overflow-hidden ... font-Space bg-sky-blue  border-2 border-blue text-md p-2 rounded-xl hover:scale-110 duration-300"
 const casualButtonLight = 'border p-1 bg-light-green rounded-xl hover:scale-110 duration-300'
+const casualButtonAdd =  " min-w-xs max-w-xs transition ease-in-out delay-150  text-ellipsis overflow-hidden ... font-Space bg-teal-400/80  border-2 border-blue text-md p-2 rounded-xl hover:scale-110 duration-300"
 export default Button

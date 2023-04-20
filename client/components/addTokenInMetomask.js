@@ -9,11 +9,12 @@ export default async function addTokenInMetomask(address,symbol,decimals){
             options: {
               address: address, 
               symbol: symbol, 
-              decimals: decimals,
+              decimals: 18,
             },
           },
+
         });
-      
+     
         if (wasAdded) {
           console.log('Thanks for your interest!');
         } else {
