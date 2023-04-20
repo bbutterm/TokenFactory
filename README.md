@@ -1,3 +1,19 @@
 # ***Create your tokens and imagine tokenomics***
- ![Header](https://sun9-17.userapi.com/impf/XJhH-1aU23opXh7E05pnjHUNwZI1MmrdxWg0mg/KdMERKr4g2A.jpg?size=600x300&quality=96&proxy=1&sign=82f5b250c7c9ab0f4aecbdc96b26555d&c_uniq_tag=VCcFG75jl3YTe7S94QIuruuzrQy5hYAlqaBYA9xy_00&type=album)
+# ***https://token-factory-delta.vercel.app/***
+Usage
+
+The TokenFactory project provides a simple web interface for creating ERC20 tokens on the Ethereum blockchain. Here are the main steps to use the application:
+
+***• Connect your MetaMask wallet to the Ethereum network (Mumbai Testnet)
+
+***• Enter the token details such as name, symbol, and total supply in the input fields.
+
+***• Click on the "Create Token" button to deploy the ERC20 token contract to the Ethereum network (Mumbai Testnet)
+
+***• Confirm the transaction in MetaMask and wait for the transaction to be mined.
+
+***• Once the token is created, you can see the token details and the contract address on the screen.
+
+***• You can also view the created token in MetaMask or any other Ethereum wallet by pushing button “Add token to MetaMask”.
+
 
