@@ -97,7 +97,7 @@ function TokenFactoryApp() {
         />
       </div>
       <div className='flex justify-center'>
-        <button className=' rounded-xl p-2 mt-5 bg-orange' onClick={createNewTokenTransaction}>Create Token</button>
+        <button className=' rounded-xl p-2 mt-5 bg-orange/80 hover:scale-110 duration-300 ' onClick={createNewTokenTransaction}>Create Token</button>
       </div>
       </div>
      </div>
