@@ -5,6 +5,7 @@ function AllTokensComp({tokenAddress,names}){
     const [addrr, setAddrr] = useState("");
     function info(index = 0) {
         setAddrr(tokenAddress[index])
+    
       }
 
     const url = "https://mumbai.polygonscan.com/address/" + `${addrr}`;

@@ -4,7 +4,7 @@ import walletProvider from "../walletProvider";
 import abi from "../data/newToken";
 import { Contract } from "ethers";
 import Link from "next/link";
-
+import Poginate from "../components/Pogination";
 
 
 const GetTokensFromAddress = () => {
@@ -12,6 +12,8 @@ const GetTokensFromAddress = () => {
   const [address, setAddress] = useState([]);
   const [addrr, setAddrr] = useState("");
  const [loader, setLoader] = useState(false);
+ const [currentPage, setCurrentPage] = useState(1);
+
 
   useEffect(() => {
     (async () => {
@@ -21,8 +23,10 @@ const GetTokensFromAddress = () => {
       setAddress(addressArray);
     })();
   }, []);
-
-  const tokensContract = address.map(
+ 
+const arrayAddress = [...address]
+arrayAddress.reverse()
+  const tokensContract = arrayAddress.map(
     (adr) => new Contract(`${adr}`, abi, walletProvider)
   );
 
@@ -46,10 +50,21 @@ const GetTokensFromAddress = () => {
   }
   }, [address]);
 
+
+  const tokenPerPage = 5
+  const lastTokenIndex = currentPage * tokenPerPage;
+  const firstTokenIndex = lastTokenIndex - tokenPerPage;
+  const currentYourToken = arrayAddress.slice(firstTokenIndex, lastTokenIndex);
+  const currentTokenYourName = name.slice(firstTokenIndex, lastTokenIndex);
+
   function info(index = 0) {
-    setAddrr(address[index]); // Тут получаем индекс из кнопки и передаём переменной addrr элемент массива address
+    setAddrr(currentYourToken[index]); // Тут получаем индекс из кнопки и передаём переменной addrr элемент массива address
   }
   const url = "https://mumbai.polygonscan.com/address/" + `${addrr}`;
+
+  function poginate(pagenum) {
+    setCurrentPage(pagenum);
+  }
 
   return (
     <>
@@ -59,7 +74,7 @@ const GetTokensFromAddress = () => {
        
           <h1 className="font-bold flex mb-5 text-[30px]">Your tokens:</h1>
           
-          { address.length === 0? (
+          {address.length === 0? (
             <Link
               className="rounded-xl p-2 mt-5 bg-orange"
               href="/tokenfactory"
@@ -69,12 +84,12 @@ const GetTokensFromAddress = () => {
           ) : (<div className="flex  flex-col ">
             
               
-              {address.map((item, index) => (
+              {currentYourToken.map((item, index) => (
                 <ul
                   key={index}
                   className="m-2  font-Space text-center text-[20px] "
                 >
-                  {name[index]}
+                  {currentTokenYourName[index]}
 
                   <div className="flex flex-row mt-2 ">
 
@@ -93,12 +108,17 @@ const GetTokensFromAddress = () => {
                       >
                         Info
                       </Link>
+              
                     </div>
                     
                   </div>
                 </ul>
               ))}
-          
+                  <Poginate
+                  tokenPerPage={tokenPerPage}
+                  totalToken={address.length}
+                  paginate={poginate}
+                />
             </div>
           )}
               

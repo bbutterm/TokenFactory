@@ -1,4 +1,4 @@
-export default async function addTokenInMetomask(address,symbol,decimals){
+export default async function addTokenInMetomask(address,symbol){
 
     try {
         // wasAdded is a boolean. Like any RPC method, an error may be thrown.
