@@ -102,10 +102,7 @@ const NewToken = ({ address }) => {
     setCurrentValue(e.target.value);
   };
   const handleChangeMinInput = (e) => {
-    if (stakeMinInput > Number(tokenInfo.balance)) {
-      alert("Enter less amount ");
-    }
-    setStakeMinInput(e.target.value);
+       setStakeMinInput(e.target.value);
   };
 
   // Stake tokens
@@ -202,7 +199,7 @@ const NewToken = ({ address }) => {
                   onStakePercentInput={setStakePercentInput}
                   handleSetPercentInput={handleSetPercentInput}
                   stakeMinInput={stakeMinInput}
-                  onStakeMinInput={handleChangeMinInput}
+                  onStakeMinInput={setStakeMinInput}
                   handleSetMinInput={handleSetMinInput}
                   onSetTime={handleSetTime}
                 />
